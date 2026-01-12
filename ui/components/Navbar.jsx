@@ -24,10 +24,10 @@ function Navbar() {
         </div>
 
         <div className='mr-9 hidden sm:block'>
-            <button className={`bg-[#11F592] p-5 font-bold text-2xl antialiased text-[#000000] border border-black rounded-full flex justify-center items-center h-8 ${poppins.className} font-bold hover:scale-105 ease-in-out duration-300 space-x-1 cursor-pointer shadow-[0_0_15px_rgba(0,255,200,0.45)]`}
+            <a href='/map/live' className={`bg-[#11F592] p-5 font-bold text-2xl antialiased text-[#000000] border border-black rounded-full flex justify-center items-center h-8 ${poppins.className} font-bold hover:scale-105 ease-in-out duration-300 space-x-1 cursor-pointer shadow-[0_0_15px_rgba(0,255,200,0.45)]`}
             >
                 <Image src={"/map.png"} alt='MAP' width={24} height={24}/> <span>Open Map</span>
-            </button>
+            </a>
         </div>
 
       
