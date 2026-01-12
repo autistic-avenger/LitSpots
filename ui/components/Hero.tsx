@@ -9,7 +9,6 @@ const roboto = Roboto({
 
 const activities = [
   "Diddy",
-  "Sutta",
   "Chai",
   "Dance",
   "Music",
@@ -39,7 +38,8 @@ function Hero() {
   return (
   <>
     
-    <div className="w-full font-sans flex mt-10 justify-center  sm:mt-40 text-7xl bg-linear-to-t from-5% from-gray-500 to-white bg-clip-text text-transparent p-9 flex-wrap">
+    <div className="w-full font-sans flex mt-10 justify-center  sm:mt-28
+     text-7xl bg-linear-to-t from-5% from-gray-500 to-white bg-clip-text text-transparent p-9 flex-wrap">
       <h1 className="flex justify-center items-center text-center flex-wrap ">
         HOST 
       </h1>
