@@ -10,6 +10,7 @@ const roboto = Roboto({
 const activities = [
   "Diddy",
   "Chai",
+  "Sutta",
   "Dance",
   "Music",
   "Gaming",
@@ -32,7 +33,7 @@ function Hero() {
         setParty(activities[next])
         return next
       });
-    }, 900);
+    }, 2000);
   }, []);
 
   return (
