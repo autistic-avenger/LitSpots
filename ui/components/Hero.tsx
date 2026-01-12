@@ -38,9 +38,6 @@ function Hero() {
 
   return (
   <>
-    <div
-      className="absolute inset-0 h-full w-full bg-black bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[32px_32px] mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_90%) [-webkit-mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_90%)] blur-[1px] -z-10"
-    ></div>
     
     <div className="w-full font-sans flex mt-10 justify-center  sm:mt-40 text-7xl bg-linear-to-t from-5% from-gray-500 to-white bg-clip-text text-transparent p-9 flex-wrap">
       <h1 className="flex justify-center items-center text-center flex-wrap ">

@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 const poppins = Poppins({
     subsets:['latin'],
-    weight: '700',
+    weight: '400',
 
 })
 
