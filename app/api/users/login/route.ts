@@ -10,6 +10,9 @@ connectDB()
 
 export async function POST(req:NextRequest){
     try{
+
+
+        
         const reqBody = await req.json()
         const {username,password} = reqBody
         
