@@ -8,7 +8,7 @@ connectDB()
 export async function GET(req:NextRequest){
     try {
         const response = NextResponse.json({
-            message:"Logout Successfully",
+            message:"Logout Successfull",
             success:true
         })
 
@@ -18,6 +18,7 @@ export async function GET(req:NextRequest){
 
         })
 
+        return response
 
         
     } catch (error) {

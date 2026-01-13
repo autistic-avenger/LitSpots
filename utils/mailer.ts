@@ -18,14 +18,16 @@ try {
 
         if(emailType == 'VERIFY'){
             await User.findByIdAndUpdate(userId,
-                {verifyToken:hashedToken,verifyTokenExpiry:Date.now()+3600000// 1hr is ms
+            {
+                $set:{verifyToken:hashedToken,verifyTokenExpiry:Date.now()+3600000// 1hr is ms
+                }
             })
         }
 
         if(emailType == 'FORGOTPASS'){
             await User.findByIdAndUpdate(userId,
-                {forgotPasswordToken:hashedToken,forgotPasswordTokenExpiry:Date.now()+3600000// 1hr is ms
-            })
+                {set:{forgotPasswordToken:hashedToken,forgotPasswordTokenExpiry:Date.now()+3600000// 1hr is ms
+            }})
         }
         
         let transporter = nodemailer.createTransport({
