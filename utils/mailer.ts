@@ -25,6 +25,8 @@ try {
         }
         
 
+        
+
         if(emailType == 'FORGOTPASS'){
             await User.findByIdAndUpdate(userId,
                 {set:{forgotPasswordToken:hashedToken,forgotPasswordTokenExpiry:Date.now()+8556952000000
