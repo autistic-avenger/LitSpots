@@ -12,9 +12,9 @@ export async function POST(req:NextRequest){
     try{
 
 
-        
-        const reqBody = await req.json()
-        const {username,password} = reqBody
+
+        const BODY = await req.json()
+        const {username,password} = BODY
         
         const user = await User.findOne({username})
         if(!user){
