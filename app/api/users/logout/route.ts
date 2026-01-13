@@ -2,7 +2,6 @@ import { connectDB } from "@/dbConfig/dbConfig";
 import {NextResponse,NextRequest } from 'next/server'
 
 
-
 connectDB()
 export async function GET(req:NextRequest){
     try {
