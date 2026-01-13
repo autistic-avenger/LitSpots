@@ -13,7 +13,6 @@ export async function GET(req:NextRequest){
             message:"Logout Successfull!",
             success:true
         })
-
         response.cookies.set("token","",{
             httpOnly:true,
             expires: new Date(0)
