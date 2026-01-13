@@ -10,7 +10,7 @@ export async function GET(req:NextRequest){
             return NextResponse.json({message:"The User Is not Logged In"},{status:400})
         }
         const response = NextResponse.json({
-            message:"Logout Successfull",
+            message:"Logout Successfull!",
             success:true
         })
 
