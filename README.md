@@ -4,6 +4,11 @@ LitSpots is a real-time social discovery web app that helps people find and join
 
 ---
 
+
+https://github.com/user-attachments/assets/874d1e14-1e5a-4fc8-a4e4-1199d63b0297
+
+
+---
 ## Introduction
 
 Social plans don’t need weeks of planning. **LitSpots** is built for spontaneity—helping users discover live hangouts in real time and connect with people nearby. Users can explore ongoing spots, join instantly, or host their own hangout for others to discover.
