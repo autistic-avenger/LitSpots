@@ -3,7 +3,6 @@ import {NextResponse,NextRequest } from 'next/server'
 
 
 
-//Testing Git NEW SETUP
 connectDB()
 export async function GET(req:NextRequest){
     try {
