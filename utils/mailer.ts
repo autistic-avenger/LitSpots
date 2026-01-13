@@ -23,6 +23,7 @@ try {
                 }
             })
         }
+
         
 
         if(emailType == 'FORGOTPASS'){
