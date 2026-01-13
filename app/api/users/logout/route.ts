@@ -9,7 +9,6 @@ export async function GET(req:NextRequest){
         if (cookie == undefined){
             return NextResponse.json({message:"The User Is not Logged In"},{status:400})
         }
-//TEST
         const response = NextResponse.json({
             message:"Logout Successfull",
             success:true
