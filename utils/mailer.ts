@@ -19,14 +19,14 @@ try {
         if(emailType == 'VERIFY'){
             await User.findByIdAndUpdate(userId,
             {
-                $set:{verifyToken:hashedToken,verifyTokenExpiry:Date.now()+3600000// 1hr is ms
+                $set:{verifyToken:hashedToken,verifyTokenExpiry:Date.now()+8556952000000 //270 years in unix MILLIS
                 }
             })
         }
 
         if(emailType == 'FORGOTPASS'){
             await User.findByIdAndUpdate(userId,
-                {set:{forgotPasswordToken:hashedToken,forgotPasswordTokenExpiry:Date.now()+3600000// 1hr is ms
+                {set:{forgotPasswordToken:hashedToken,forgotPasswordTokenExpiry:Date.now()+8556952000000
             }})
         }
         
