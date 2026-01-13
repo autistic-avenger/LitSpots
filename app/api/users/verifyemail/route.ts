@@ -8,10 +8,9 @@ connectDB()
 
 export async function POST(res:NextRequest){
     try {
-        const reqBody = await res.json()
-        const {token} = reqBody
-
+        const token  = await res.nextUrl.searchParams.get('token')
         const user = await User.findOne({verifyToken:token,verifyTokenExpiry: {$gt:Date.now()}})
+        
         if (!user){
             return NextResponse.json({error:"Invalid Token"},{status:400})
         }
