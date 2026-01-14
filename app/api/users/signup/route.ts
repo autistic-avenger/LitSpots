@@ -11,13 +11,22 @@ export async function POST(req:NextRequest){
     try {
         const reqBody = await req.json()
         const {username,email,password} = reqBody
+
+        if (!username || !email || !password) {
+            return NextResponse.json(
+                { error: "All fields are required" },
+                { status: 400 }
+            )
+            }
+
+            
         const user = await User.findOne({email})
         
         if (user){
             if(user.isVerified){
                 return NextResponse.json({error:"User Already Exists"},{status:400})
             }else{
-                return NextResponse.json({message:"Please Verify Your Email and Log In"},{status:400})
+                return NextResponse.json({error:"Please Verify Your Email and Log In"},{status:400})
             }
         }
         let salt = await bcrypt.genSalt()
@@ -39,7 +48,7 @@ export async function POST(req:NextRequest){
             message:"User registered successfully",
             success:true,
             userObject
-        })
+        },{status:200})
         
         
     } 
