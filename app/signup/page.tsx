@@ -57,7 +57,11 @@ export default function SignupPage() {
                     
                 }
             } catch (err:any) {
-                toast.error(err.response?.data?.error || "Something went wrong")
+                if (err.response?.data?.error =="No recipients defined"){
+                    toast.error(`Can't mail to ${user.email}`)
+                }else{
+                    toast.error(err.response?.data?.error || "Something went wrong")
+                }
             }finally{
                 setLoading(false)
             }

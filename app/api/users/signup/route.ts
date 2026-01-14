@@ -20,7 +20,9 @@ export async function POST(req:NextRequest){
             }
 
             
-        const user = await User.findOne({email})
+        const user = await User.findOne({
+            $or: [{ email }, { username }]
+        });
         
         if (user){
             if(user.isVerified){
