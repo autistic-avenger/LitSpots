@@ -37,7 +37,7 @@ Social plans don’t need weeks of planning. **LitSpots** is built for spontanei
 
 ### Backend
 - Next.js API Routes
-- 
+ 
 ### Database
 - MongoDB
 
