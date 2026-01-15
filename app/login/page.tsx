@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from "react"
+import { KeyboardEventHandler, useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import axios from "axios"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -60,7 +60,7 @@ export default function LoginPage() {
                     toast.success("Successfully logged in!")  
                     
                     setTimeout(()=>{
-                        router.push("/map/live")
+                        router.replace("/map/live")
                     },1500)
                     
                 }
@@ -87,6 +87,11 @@ export default function LoginPage() {
         }
     }
 
+    const HandleEnter = (e:any) => {
+        if (e.key === "Enter" && !e.repeat) {
+            onLogin()
+        }
+    };
 
   return (
     <div className="h-screen w-full flex justify-center items-center">
@@ -107,7 +112,9 @@ export default function LoginPage() {
                     setUser((user)=>{
                         return {...user,username:e.target.value}
                     })
+                
                 }}
+                onKeyDownCapture={HandleEnter}
                 />
 
             <div className="relative h-20 w-full flex justify-center">
@@ -131,10 +138,12 @@ export default function LoginPage() {
                     autoComplete="off"
                     value={user.password}
                     onChange={(e)=>{
-                    setUser((user)=>{
-                        return {...user,password:e.target.value}
-                    })
-                }}/>
+                        setUser((user)=>{
+                            return {...user,password:e.target.value}
+                        })
+                    }}
+                    onKeyDownCapture={HandleEnter}
+                />
             </div>
 
             <div className="w-full h-20 mt-13 justify-center flex items-center ">

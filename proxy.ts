@@ -14,9 +14,7 @@ export default async function middleware(request:NextRequest) {
     }
 
     if(pathname=="signup" && !isLoggedIn){
-        let url = request.nextUrl.clone()
-        url.pathname = "/signup"
-        return NextResponse.redirect(url)
+        return NextResponse.next()
     }
 
     if(!(isLoggedIn) ){
