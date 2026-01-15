@@ -51,7 +51,7 @@ export default function SignupPage() {
                     toast.success("Please Verify Your Email!")     
                     
                     setTimeout(()=>{
-                        router.push("/login")
+                        router.replace("/login")
         
                     },1500)
                     
@@ -68,10 +68,11 @@ export default function SignupPage() {
         }
     }
 
-
-
-
-
+    const HandleEnter = (e:any) => {
+        if (e.key === "Enter" && !e.repeat) {
+            onSignup()
+        }
+    };
   return (
     <div className="h-screen w-full flex justify-center items-center">
         <div className="h-145 w-100 rounded-2xl bg-[#131d13] flex flex-col items-center shadow-green-500 shadow-[0px_0px_12px_rgba(0,0,0,0.25)]">
@@ -92,6 +93,7 @@ export default function SignupPage() {
                         return {...user,email:e.target.value}
                     })
                 }}
+                onKeyDownCapture={HandleEnter}
                 />
 
             <input 
@@ -105,6 +107,7 @@ export default function SignupPage() {
                         return {...user,username:e.target.value}
                     })
                 }}
+                onKeyDownCapture={HandleEnter}
                 />
 
             <div className="relative h-20 w-full flex justify-center">
@@ -127,10 +130,12 @@ export default function SignupPage() {
                     placeholder="Password"
                     autoComplete="off"
                     onChange={(e)=>{
-                    setUser((user)=>{
-                        return {...user,password:e.target.value}
-                    })
-                }}/>
+                        setUser((user)=>{
+                            return {...user,password:e.target.value}
+                        })
+                    }}
+                    onKeyDownCapture={HandleEnter}
+                    />
             </div>
 
             <div className="w-full h-20 mt-8 justify-center flex items-center ">
