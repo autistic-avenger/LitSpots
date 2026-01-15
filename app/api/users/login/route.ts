@@ -16,14 +16,14 @@ export async function POST(req:NextRequest){
         
         const user = await User.findOne({username})
         if(!user){
-            return NextResponse.json({error:"User does not exists"},{status:400})
+            return NextResponse.json({error:"Username not Found!"},{status:400})
 
         }
         console.log("USER EXISTS!");
 
         const validPass = await bcrypt.compare(password,user.password)
         if (!validPass){
-            return NextResponse.json({error:"Password Missmatch"},{status:400})
+            return NextResponse.json({error:"Password incorrect!"},{status:400})
         }
 
         const tokenData = {
