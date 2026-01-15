@@ -19,7 +19,6 @@ export async function POST(req:NextRequest){
             return NextResponse.json({error:"Username not Found!"},{status:400})
 
         }
-        console.log("USER EXISTS!");
 
         const validPass = await bcrypt.compare(password,user.password)
         if (!validPass){

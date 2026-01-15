@@ -42,7 +42,6 @@ export default function LoginPage() {
     const [loading,setLoading] = useState<boolean>(false)
     const [ShowPassword,setShowPassword] = useState<boolean>(false)
     const [lastSubmit, setLastSubmit] = useState<number>(0)
-    const [wasRedirectedByServer,SetRedirected] = useState<boolean>(false)
     
     
     const onLogin = async ()=>{
