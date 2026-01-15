@@ -16,6 +16,9 @@ export default async function middleware(request:NextRequest) {
     else if(isLoggedIn){
         return NextResponse.next()
     }
+
+
+    
     
     return NextResponse.next()  
 }
