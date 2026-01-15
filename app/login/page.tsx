@@ -1,8 +1,8 @@
 'use client'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import axios from "axios"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
 import { Roboto } from "next/font/google"
 import Link from "next/link"
@@ -21,8 +21,18 @@ interface User{
 
 
 export default function LoginPage() {
-
-      const router = useRouter()
+    
+    const router = useRouter()
+    
+    //check for server redirect (middleware)
+    const from  = useSearchParams().get("from")
+    useEffect(()=>{
+        if (from=="server"){
+            toast.error("Please Login in First!")
+            router.replace("/login")
+        }
+    },[])    
+    
     
     const [user,setUser] = useState<User>({
         username:"",
@@ -32,8 +42,8 @@ export default function LoginPage() {
     const [loading,setLoading] = useState<boolean>(false)
     const [ShowPassword,setShowPassword] = useState<boolean>(false)
     const [lastSubmit, setLastSubmit] = useState<number>(0)
-
-
+    const [wasRedirectedByServer,SetRedirected] = useState<boolean>(false)
+    
     
     const onLogin = async ()=>{
         let timeElapsed = (Date.now()-lastSubmit)
@@ -49,16 +59,16 @@ export default function LoginPage() {
                     setLoading(true)
                     await axios.post("/api/users/login",user)
                     toast.success("Successfully logged in!")  
-
+                    
                     setTimeout(()=>{
                         router.push("/map/live")
                     },1500)
                     
                 }
             }catch (err:any) {
-              toast.error(err.response?.data?.error || "Something went wrong")
-
-              if (err.response?.data?.error == "Username not Found!"){
+                toast.error(err.response?.data?.error || "Something went wrong")
+                
+                if (err.response?.data?.error == "Username not Found!"){
                 setUser((user)=>{
                 return {...user,username:""}
                 })
