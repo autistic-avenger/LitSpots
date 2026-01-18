@@ -15,16 +15,7 @@ const userSchema = new mongoose.Schema({
         required :[true, "Please Provide a password"],
         unique:false
     },
-    isVerified:{
-        type:Boolean,
-        default:false
-    },
-    isAdmin:{
-        type:Boolean,
-        default:false
-    },
-    verifyToken:String,
-    verifyTokenExpiry:Date
+
 }) 
 
 const User = mongoose.models.users || mongoose.model("users",userSchema)

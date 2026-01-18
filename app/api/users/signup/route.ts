@@ -2,7 +2,6 @@ import { connectDB } from "@/dbConfig/dbConfig";
 import User from '@/models/userModel.js'
 import {NextResponse,NextRequest } from 'next/server'
 import bcrypt from "bcryptjs";
-import { sendMail } from "@/utils/mailer";
 
 
 connectDB()
@@ -25,11 +24,8 @@ export async function POST(req:NextRequest){
         });
         
         if (user){
-            if(user.isVerified){
-                return NextResponse.json({error:"User Already Exists"},{status:400})
-            }else{
-                return NextResponse.json({error:"Please Verify Your Email and Log In"},{status:400})
-            }
+            return NextResponse.json({error:"User Already Exists"},{status:400})
+
         }
         let salt = await bcrypt.genSalt()
         let encryptedPass = await bcrypt.hash(password,salt)
@@ -40,8 +36,6 @@ export async function POST(req:NextRequest){
             password:encryptedPass,
         })
         const savedUser = await newUser.save()
-
-        await sendMail({email,emailType:'VERIFY' ,userId:savedUser._id})
 
         const userObject = savedUser.toObject();
         delete userObject.password;
