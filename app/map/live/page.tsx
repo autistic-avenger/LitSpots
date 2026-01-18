@@ -86,7 +86,7 @@ export default function MAPS() {
     }
     
   return (
-    <div className='relative w-full h-screen'>
+    <div className='relative w-full h-screen overflow-hidden'>
         <div className='absolute w-full flex justify-center items-center pointer-events-none h-15 z-9'>
 
             <div className='min-w-60 w-140 flex h-13 bg-white  border-3 rounded-4xl m-2 border-[#11F592] z-9 pl-6 overflow-hidden pointer-events-auto'>
@@ -127,7 +127,7 @@ export default function MAPS() {
             {pins.map((pins)=>{
                 if (pins.lat==0 && pins.lon == 0) return ;
                 return (<Marker key={pins.lat} longitude={pins.lon} latitude={pins.lat} anchor="bottom" >
-                <img src="/map.svg" className='h-10 w-10' />
+                <img src="/map.svg"  className='h-10 cursor-pointer w-10' />
                 </Marker>)
             })}
         </Map>
@@ -135,6 +135,14 @@ export default function MAPS() {
         {/*Footer Element*/}
         
         <div className='h-14 w-full absolute z-1 bottom-0 pointer-events-none flex justify-center items-center'>
+                {/* PARTY FORM */}
+
+                <div className=' min-w-60 w-140   m-10 pointer-events-none ml-9 mr-9 transition duration absolute bottom-0 h-433 '>
+                
+                </div>
+                
+                {/* TO DO :19th */}
+
                 <button className='min-w-60 w-140 z-2 h-12 transition-all duration-300 ease-in-out active:scale-[0.96] active:duration-150 bg-[#11F592] rounded-4xl pointer-events-auto cursor-pointer outline-1 outline-black mt-0.5 mb-0.5 flex justify-center items-center mr-2 ml-2 '
                 onClick={handleHostPartyClick}> 
                     <h1 className=' text-white text-3xl font-sans font-medium'>
