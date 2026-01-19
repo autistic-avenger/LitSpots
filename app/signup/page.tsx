@@ -48,7 +48,7 @@ export default function SignupPage() {
                 }else{
                     setLoading(true)
                     await axios.post("/api/users/signup",user)
-                    toast.success("Please Verify Your Email!")     
+                    toast.success("Please Login!")     
                     
                     setTimeout(()=>{
                         router.replace("/login")
@@ -57,11 +57,8 @@ export default function SignupPage() {
                     
                 }
             } catch (err:any) {
-                if (err.response?.data?.error =="No recipients defined"){
-                    toast.error(`Can't mail to ${user.email}`)
-                }else{
                     toast.error(err.response?.data?.error || "Something went wrong")
-                }
+
             }finally{
                 setLoading(false)
             }

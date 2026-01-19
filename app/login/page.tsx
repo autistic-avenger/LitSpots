@@ -59,9 +59,9 @@ export default function LoginPage() {
                     await axios.post("/api/users/login",user)
                     toast.success("Successfully logged in!")  
                     
-                    setTimeout(()=>{
-                        router.replace("/map/live")
-                    },1500)
+                   
+                    router.replace("/map/live")
+                    
                     
                 }
             }catch (err:any) {

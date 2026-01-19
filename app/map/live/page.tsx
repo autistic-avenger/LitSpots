@@ -22,7 +22,8 @@ export default function MAPS() {
     const mapRef = useRef<MapRef | null>(null);
     const [submitting,setSubmitting] = useState<Sumitting>("NOT")
     const [pins,setPin] = useState<Array<Cords>>([{lon:0,lat:0}])
-
+    const [isOpen,setMenu] = useState<Boolean>(false)
+    const [mapEnabled,setMapEnabled]  = useState<boolean>(true)
 
 
     
@@ -65,9 +66,17 @@ export default function MAPS() {
     }
     const handlePartyPin = async (e:MapLayerMouseEvent)=>{
         setSubmitting("MENU")
+        setMenu(true)
+        setMapEnabled(false)
         setPin((pins)=>{
             return [...pins,{lat:e.lngLat.lat,lon:e.lngLat.lng}]
         })
+        mapRef.current?.flyTo({
+            center:[e.lngLat.lng,e.lngLat.lat-0.0056],
+            zoom:15,
+            duration:500
+        })
+        
         
 
     }
@@ -75,6 +84,8 @@ export default function MAPS() {
     const handleSubmit= async ()=>{
             console.log("RUN PARTY SUBMISSION LOGIC");
             setSubmitting("NOT")
+            setMenu(false)
+            setMapEnabled(true)
     }
 
     const handleHostPartyClick = ()=>{
@@ -123,6 +134,9 @@ export default function MAPS() {
           cursor='auto'
           attributionControl= {false}
           onClick={submitting=="PIN"? handlePartyPin : undefined}
+          dragPan = {mapEnabled}
+          boxZoom = {mapEnabled}
+          scrollZoom ={mapEnabled}
         >
             {pins.map((pins)=>{
                 if (pins.lat==0 && pins.lon == 0) return ;
@@ -132,16 +146,27 @@ export default function MAPS() {
             })}
         </Map>
 
-        {/*Footer Element*/}
+        {/*Footer Elementsss*/}
         
         <div className='h-14 w-full absolute z-1 bottom-0 pointer-events-none flex justify-center items-center'>
-                {/* PARTY FORM */}
 
-                <div className=' min-w-60 w-140   m-10 pointer-events-none ml-9 mr-9 transition duration absolute bottom-0 h-433 '>
-                
+            <div className="absolute bottom-0 overflow-hidden left-0 right-0 flex justify-center  ">
+                <div className={`
+                    min-w-60 w-full max-w-140 ml-2 mr-2 h-150 mb-9 transition-all duration-500 ease-in-out rounded-t-3xl pointer-events-auto 
+                    ${isOpen? "bg-[#11F592]/40 backdrop-blur-[1px] translate-y-2 border border-black": "translate-y-full opacity-65 "
+                }`}>
+                    <div className='h-16 w-full pr-3 pl-3'>
+                        <input type="text" placeholder='Party name' className={`relative h-16 mt-6 pl-4 rounded-2xl outline-2 min-w-60 w-full bg-white text-xl text-gray-800 
+                        ${isOpen?"":"hidden"}
+                        ` }/>
+                    </div>
+
+
+
+
                 </div>
+            </div>
                 
-                {/* TO DO :19th */}
 
                 <button className='min-w-60 w-140 z-2 h-12 transition-all duration-300 ease-in-out active:scale-[0.96] active:duration-150 bg-[#11F592] rounded-4xl pointer-events-auto cursor-pointer outline-1 outline-black mt-0.5 mb-0.5 flex justify-center items-center mr-2 ml-2 '
                 onClick={handleHostPartyClick}> 
