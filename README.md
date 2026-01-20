@@ -15,38 +15,47 @@ Social plans don’t need weeks of planning. **LitSpots** is built for spontanei
 
 ---
 
-## Features
-
--  Real-time hangout discovery  
--  Location-based social spots  
--  Join or host spontaneous meetups  
--  Secure authentication using JWT  
--  Email notifications via Nodemailer  
--  Fast, modern UI with Next.js & React  
--  Styled using Tailwind CSS  
-
----
-
-## Tech Stack
-
 ### Frontend
 - Next.js 16
 - React 19
 - TypeScript
 - Tailwind CSS
+- **MapLibre GL + React Map GL**
+  - Interactive, WebGL-based maps
+  - React bindings via `react-map-gl`
+  - Styled UI overlays and controls using Tailwind CSS
 
 ### Backend
 - Next.js API Routes
- 
+
 ### Database
 - MongoDB
 
 ### Authentication & Utilities
 - JWT (jsonwebtoken)
 - Password hashing (bcryptjs)
-- Email service (nodemailer)
 - Environment management (dotenv)
 
+---
+
+## Mapping & Geospatial Stack
+
+### Map Rendering
+- **MapLibre GL JS**
+  - Open-source map rendering engine (Mapbox GL JS alternative)
+  - No vendor lock-in or proprietary licenses
+  - Used in **client components only** due to browser/WebGL dependencies
+
+### React Integration
+- **react-map-gl**
+  - React wrapper for MapLibre GL
+  - Compatible with React 19 and Next.js App Router
+  - Supports markers, popups, layers, and custom overlays
+
+### Map Data
+- **OpenStreetMap (OSM)**
+  - Open-source geographic data (roads, buildings, POIs)
+  - Primary data source for all map tiles
 ---
 
 ## Installation
@@ -68,6 +77,7 @@ DOMAIN=
 MAILER_USER=
 MAILER_PASS=
 JWT_SECRET=
+GEOLOCATION_SEARCH =
 ```
 ---
 
