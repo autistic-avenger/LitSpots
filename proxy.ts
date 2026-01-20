@@ -6,7 +6,7 @@ export default async function middleware(request:NextRequest) {
     //auth checker
     let isLoggedIn;
     const token = request.cookies.get('token')?.value
-    if (token==""){
+    if (token=="" || token == undefined){
         isLoggedIn = false 
     }else{
         isLoggedIn = true

@@ -1,5 +1,5 @@
 "use client"
-import {useState,useRef} from 'react';
+import {useState,useRef, useEffect} from 'react';
 import {Map, Marker} from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import Image from 'next/image';
@@ -18,6 +18,10 @@ interface FormData{
     eventType:eventType
     
 }
+interface PinData extends FormData{
+    lat:number
+    lon:number
+}
 
 interface Cords{
     lat:number
@@ -33,13 +37,25 @@ export default function MAPS() {
     const [search,setSearch] = useState<string>("")
     const mapRef = useRef<MapRef | null>(null);
     const [submitting,setSubmitting] = useState<Sumitting>("NOT")
-    const [pins,setPin] = useState<Array<Cords>>([{lon:0,lat:0}])
+    const [pins,setPin] = useState<Cords>({lon:0,lat:0})
     const [isOpen,setMenu] = useState<boolean>(false)
     const [mapEnabled,setMapEnabled]  = useState<boolean>(true)
     const [dropDownActive,setDropDownActive] = useState<boolean>(false)
     const [formData,setFormData] = useState<FormData>({name:"",description:"",eventType:"General"})
     const [durationHours,setDurationHours] = useState<any>("")
     const [durationMins,setDurationMins] = useState<any>("")
+    const [dbPins,setDbPin] = useState<any>([])
+
+    useEffect(()=>{
+
+        const interval = setInterval(async ()=>{
+            const res = await axios.get("/api/map")
+            setDbPin(res.data)
+        },4000)
+
+        return () => clearInterval(interval);
+    },[])
+
     
     
     
@@ -84,16 +100,12 @@ export default function MAPS() {
         setSubmitting("MENU")
         setMenu(true)
         setMapEnabled(false)
-        setPin((pins)=>{
-            return [...pins,{lat:e.lngLat.lat,lon:e.lngLat.lng}]
-        })
+        setPin({lon:e.lngLat.lng,lat:e.lngLat.lat})
         mapRef.current?.flyTo({
-            center:[e.lngLat.lng,e.lngLat.lat-0.0046],
-            zoom:15,
+            center:[e.lngLat.lng,e.lngLat.lat-0.00025],
+            zoom:19,
             duration:500
         })
-        
-        
 
     }
 
@@ -110,29 +122,20 @@ export default function MAPS() {
             if (durationInMs == 0){
                 durationInMs = 1800000
             }//default time for event :30mins 1800000in MS
-            let payload = {...formData,duration:durationInMs}
+            let payload = {...formData,duration:durationInMs,lat:pins.lat,lon:pins.lon}
 
             
 
             try {
                 let response = await axios.post("/api/event",payload)
-
-
-
                 toast.success(response?.data?.message)
-                
- 
- 
- 
- 
- 
- 
                 setSubmitting("NOT")
                 setMenu(false)
                 setMapEnabled(true)
                 setFormData({name:"",description:"",eventType:"General"})
                 setDurationHours("")
                 setDurationMins("")
+                setPin({lat:0,lon:0})
             } catch (error:any) {
                 toast.error(error.response.data.error)
                 if(error?.response?.data?.error == "Invalid Login Token"){
@@ -145,6 +148,7 @@ export default function MAPS() {
                 setFormData({name:"",description:"",eventType:"General"})
                 setDurationHours("")
                 setDurationMins("")
+                setPin({lat:0,lon:0})
             }
 
             
@@ -203,14 +207,20 @@ export default function MAPS() {
           onClick={submitting=="PIN"? handlePartyPin : undefined}
           dragPan = {mapEnabled}
           boxZoom = {mapEnabled}
-          scrollZoom ={mapEnabled}
-        >
-            {pins.map((pins)=>{
-                if (pins.lat==0 && pins.lon == 0) return ;
-                return (<Marker key={pins.lat} longitude={pins.lon} latitude={pins.lat} anchor="bottom" >
-                <img src="/map.svg"  className='h-10 cursor-pointer w-10' />
-                </Marker>)
+          scrollZoom ={true}
+        >   
+            {(pins.lat!=0&&pins.lon!=0)&&
+                <Marker key={pins.lat} longitude={pins.lon} latitude={pins.lat}   anchor="bottom">
+                    <img src={`/${formData.eventType}Pin.png`}  className='h-20 cursor-pointer w-20' />
+                </Marker>
+            }
+            {dbPins.map((pin:any)=>{
+
+                return <Marker key={pin._id} longitude={pin.longitude} latitude={pin.latitude}   anchor="bottom">
+                <img src={`/${pin.type}Pin.png`}  className='h-20 cursor-pointer w-20' /> 
+                </Marker>
             })}
+
         </Map>
 
         {/*Footer Elementsss*/}
