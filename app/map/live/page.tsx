@@ -7,8 +7,8 @@ import { MapRef } from 'react-map-gl/maplibre';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { MapLayerMouseEvent, MapMouseEvent } from 'maplibre-gl';
-
-type eventType = "Food"|"Study"|"Music"|"Sutta"|"General"|"Gaming"
+import eventType from '@/types/eventType';
+import { useRouter } from 'next/navigation';
 
 const arrayOfEvents:eventType[] = ["Food","Study","Music","Sutta","General","Gaming"]
 
@@ -16,7 +16,7 @@ interface FormData{
     name:string
     description:string
     eventType:eventType
-
+    
 }
 
 interface Cords{
@@ -27,7 +27,9 @@ type Sumitting = 'PIN'|'MENU'|"NOT"
 
 export default function MAPS() {
     
-
+    const router = useRouter()
+    
+    
     const [search,setSearch] = useState<string>("")
     const mapRef = useRef<MapRef | null>(null);
     const [submitting,setSubmitting] = useState<Sumitting>("NOT")
@@ -38,8 +40,8 @@ export default function MAPS() {
     const [formData,setFormData] = useState<FormData>({name:"",description:"",eventType:"General"})
     const [durationHours,setDurationHours] = useState<any>("")
     const [durationMins,setDurationMins] = useState<any>("")
-
-
+    
+    
     
     async function onSearch(){
         if(search==""){
@@ -107,11 +109,24 @@ export default function MAPS() {
             let durationInMs = (3600000*durationHours) + (60000*durationMins)
             if (durationInMs == 0){
                 durationInMs = 1800000
-            }
+            }//default time for event :30mins 1800000in MS
             let payload = {...formData,duration:durationInMs}
 
+            
+
             try {
-                // const response = await axios.get("/") 
+                let response = await axios.post("/api/event",payload)
+
+
+
+                toast.success(response?.data?.message)
+                
+ 
+ 
+ 
+ 
+ 
+ 
                 setSubmitting("NOT")
                 setMenu(false)
                 setMapEnabled(true)
@@ -120,6 +135,10 @@ export default function MAPS() {
                 setDurationMins("")
             } catch (error:any) {
                 toast.error(error.response.data.error)
+                if(error?.response?.data?.error == "Invalid Login Token"){
+                    router.replace("/login")
+                }
+
                 setSubmitting("NOT")
                 setMenu(false)
                 setMapEnabled(true)
@@ -275,34 +294,55 @@ export default function MAPS() {
                     </div>
                     
                     <div className='relative h-16 px-3'>
-                        <div className='relative flex flex-row border-2 justify-start items-center h-full w-full bg-white mt-5 rounded-xl text-black text-xl'>
-                            <div className='relative pl-5'>
+                        <div className='relative flex flex-row border-2 justify-center sm:justify-start items-center h-full w-full bg-white mt-5 rounded-xl text-black text-xl '>
+                            <div className='relative pl-1 sm:pl-5 '>
                                 <h1>Duration :</h1>
                             </div>
 
 
                             <div className='relative'>
-                                <input min={0} max={24} type="number" name="hours" id="hours" className='h-10 w-12  select-none text-center ml-8 mr-5 bg-gray-300 p-2' placeholder='hr' 
+                                <input type="number" name="hours" id="hours" className='h-10 w-12 rounded-xl select-none text-center ml-2 sm:ml-8 mr-3 sm:mr-5 bg-gray-300 p-2' placeholder='hr' 
                                 value={durationHours}
                                 onChange={(E)=>{
-                                    setDurationHours(Number(E.target.value))
+                                    if(Number(E.target.value)>24){
+                                        setDurationHours(24)
+                                    }
+                                    else if(Number(E.target.value)<0){
+                                        setDurationHours(0)
+                                    }
+                                    else if( E.target.value==""){
+                                        setDurationHours("")
+                                    }else{
+
+                                        setDurationHours(Number(E.target.value))
+                                    }
                                 }}
                                 />
                             </div>
                             
-                            <div>
+                            <div className='hidden sm:block'>
                                 <h1>Hours</h1>        
                             </div>
                             
                             <div className='relative'>
-                                <input min={0} max={60} type="number" name="hours" id="hours" className='h-10 w-12  select-none text-center ml-5 mr-5 bg-gray-300 p-2' placeholder='min' 
+                                <input type="number" name="hours" id="hours" className='h-10 w-12 rounded-xl  select-none text-center sm:ml-5 ml-1 mr-3 sm:mr-5 bg-gray-300 p-2' placeholder='min' 
                                 value={durationMins}
                                 onChange={(E)=>{
-                                    setDurationMins(Number(E.target.value))
+                                    if(Number(E.target.value)>60){
+                                        setDurationMins(60)
+                                    }
+                                    else if(Number(E.target.value)<0){
+                                        setDurationMins(0)
+                                    }
+                                    else if( E.target.value==""){
+                                        setDurationMins("")
+                                    }else{
+                                        setDurationMins(Number(E.target.value))
+                                    }
                                 }}
                                 />
                             </div>
-                            <div>
+                            <div className='hidden sm:block'>
                                 <h1>Minutes</h1>        
                             </div>
 

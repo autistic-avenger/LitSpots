@@ -4,7 +4,13 @@ import { NextRequest, NextResponse } from "next/server";;
 export default async function middleware(request:NextRequest) {
 
     //auth checker
-    const isLoggedIn = request.cookies.get('token')?.value
+    let isLoggedIn;
+    const token = request.cookies.get('token')?.value
+    if (token==""){
+        isLoggedIn = false 
+    }else{
+        isLoggedIn = true
+    }
     const pathname = request.nextUrl.pathname.split('/').filter(Boolean)[0]
 
     if((pathname=="login" || pathname=="signup") && isLoggedIn){
