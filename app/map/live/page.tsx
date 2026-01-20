@@ -223,7 +223,7 @@ export default function MAPS() {
           onClick={submitting=="PIN"? handlePartyPin : undefined}
           dragPan = {mapEnabled}
           boxZoom = {mapEnabled}
-          scrollZoom ={true}
+          scrollZoom ={mapEnabled}
         >   
             {(pins.lat!=0&&pins.lon!=0)&&
                 <Marker key={pins.lat} longitude={pins.lon} latitude={pins.lat}   anchor="bottom">
