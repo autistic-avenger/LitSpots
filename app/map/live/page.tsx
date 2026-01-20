@@ -45,6 +45,8 @@ export default function MAPS() {
     const [durationHours,setDurationHours] = useState<any>("")
     const [durationMins,setDurationMins] = useState<any>("")
     const [dbPins,setDbPin] = useState<any>([])
+    const [hostDisabled,setHostDisabled] = useState<boolean>(false)
+    // const [zoomlevel,setZoom] = useState<number>(12) Will apply Visible on zooming if Scaling issues  
 
     useEffect(()=>{
 
@@ -91,6 +93,12 @@ export default function MAPS() {
             toast.error("error")
         }
     }
+
+    function showThrottling(){
+        toast.error("Please relax for few seconds!")
+    }
+
+
     function handleEnter(e:any){
         if(e.key=="Enter"&& !e.repeat){
             onSearch()
@@ -132,10 +140,14 @@ export default function MAPS() {
                 setSubmitting("NOT")
                 setMenu(false)
                 setMapEnabled(true)
-                setFormData({name:"",description:"",eventType:"General"})
                 setDurationHours("")
                 setDurationMins("")
-                setPin({lat:0,lon:0})
+                setTimeout(()=>{
+                    setPin({lat:0,lon:0})
+                    setHostDisabled(false)
+                    setFormData({name:"",description:"",eventType:"General"})
+                },6000)
+                setHostDisabled(true)
             } catch (error:any) {
                 toast.error(error.response.data.error)
                 if(error?.response?.data?.error == "Invalid Login Token"){
@@ -145,10 +157,14 @@ export default function MAPS() {
                 setSubmitting("NOT")
                 setMenu(false)
                 setMapEnabled(true)
-                setFormData({name:"",description:"",eventType:"General"})
                 setDurationHours("")
                 setDurationMins("")
-                setPin({lat:0,lon:0})
+                setTimeout(()=>{
+                    setPin({lat:0,lon:0})
+                    setHostDisabled(false)
+                    setFormData({name:"",description:"",eventType:"General"})
+                },6000)
+                setHostDisabled(true)
             }
 
             
@@ -367,7 +383,7 @@ export default function MAPS() {
                 
 
                 <button className='min-w-60 w-140 z-2 h-12 transition-all duration-300 ease-in-out active:scale-[0.96] active:duration-150 bg-[#11F592] rounded-4xl pointer-events-auto cursor-pointer outline-1 outline-black mt-0.5 mb-0.5 flex justify-center items-center mr-2 ml-2 '
-                onClick={handleHostPartyClick}> 
+                onClick={hostDisabled?showThrottling:handleHostPartyClick}> 
                     <h1 className=' text-white text-3xl font-sans font-medium'>
                         {submitting === "NOT" && "Host a Party"}
                         {submitting === "PIN" && "Click on the spot!"}
