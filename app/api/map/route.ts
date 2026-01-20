@@ -4,12 +4,15 @@ import { connectDB } from "@/dbConfig/dbConfig";
 
 let cachedData:any = null;
 let lastFetch = 0;
-const duration = 6 * 1000; 
+const duration = 7 * 1000; 
 
 export async function GET() {
   
   if (!cachedData || Date.now() - lastFetch > duration) {
     connectDB()
+    await Event.deleteMany({
+      timeUpto: { $lt: Date.now() }
+    });
     cachedData = await Event.find();
     lastFetch = Date.now();
   }
