@@ -8,6 +8,16 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { MapLayerMouseEvent, MapMouseEvent } from 'maplibre-gl';
 
+type eventType = "Food"|"Study"|"Music"|"Sutta"|"General"|"Gaming"
+
+const arrayOfEvents:eventType[] = ["Food","Study","Music","Sutta","General","Gaming"]
+
+interface FormData{
+    name:string
+    description:string
+    eventType:eventType
+
+}
 
 interface Cords{
     lat:number
@@ -22,8 +32,12 @@ export default function MAPS() {
     const mapRef = useRef<MapRef | null>(null);
     const [submitting,setSubmitting] = useState<Sumitting>("NOT")
     const [pins,setPin] = useState<Array<Cords>>([{lon:0,lat:0}])
-    const [isOpen,setMenu] = useState<Boolean>(false)
+    const [isOpen,setMenu] = useState<boolean>(false)
     const [mapEnabled,setMapEnabled]  = useState<boolean>(true)
+    const [dropDownActive,setDropDownActive] = useState<boolean>(false)
+    const [formData,setFormData] = useState<FormData>({name:"",description:"",eventType:"General"})
+    const [durationHours,setDurationHours] = useState<any>("")
+    const [durationMins,setDurationMins] = useState<any>("")
 
 
     
@@ -72,7 +86,7 @@ export default function MAPS() {
             return [...pins,{lat:e.lngLat.lat,lon:e.lngLat.lng}]
         })
         mapRef.current?.flyTo({
-            center:[e.lngLat.lng,e.lngLat.lat-0.0056],
+            center:[e.lngLat.lng,e.lngLat.lat-0.0046],
             zoom:15,
             duration:500
         })
@@ -82,10 +96,44 @@ export default function MAPS() {
     }
 
     const handleSubmit= async ()=>{
-            console.log("RUN PARTY SUBMISSION LOGIC");
-            setSubmitting("NOT")
-            setMenu(false)
-            setMapEnabled(true)
+            if (formData.name==""){
+                toast.error("Party name can't be empty!",{duration:900})
+                return
+            }
+            if(formData.description==""){
+                toast.error("Description can't be empty!",{duration:900})
+                return
+            }
+            let durationInMs = (3600000*durationHours) + (60000*durationMins)
+            if (durationInMs == 0){
+                durationInMs = 1800000
+            }
+            let payload = {...formData,duration:durationInMs}
+
+            try {
+                // const response = await axios.get("/") 
+                setSubmitting("NOT")
+                setMenu(false)
+                setMapEnabled(true)
+                setFormData({name:"",description:"",eventType:"General"})
+                setDurationHours("")
+                setDurationMins("")
+            } catch (error:any) {
+                toast.error(error.response.data.error)
+                setSubmitting("NOT")
+                setMenu(false)
+                setMapEnabled(true)
+                setFormData({name:"",description:"",eventType:"General"})
+                setDurationHours("")
+                setDurationMins("")
+            }
+
+            
+
+
+            
+            
+            
     }
 
     const handleHostPartyClick = ()=>{
@@ -150,15 +198,115 @@ export default function MAPS() {
         
         <div className='h-14 w-full absolute z-1 bottom-0 pointer-events-none flex justify-center items-center'>
 
-            <div className="absolute bottom-0 overflow-hidden left-0 right-0 flex justify-center  ">
+            <div className="absolute bottom-0 overflow left-0 right-0 flex justify-center  ">
                 <div className={`
-                    min-w-60 w-full max-w-140 ml-2 mr-2 h-150 mb-9 transition-all duration-500 ease-in-out rounded-t-3xl pointer-events-auto 
+                    min-w-60 w-full max-w-140 ml-2 mr-2 h-120 mb-9 transition-all duration-500 ease-in-out rounded-t-3xl pointer-events-auto 
                     ${isOpen? "bg-[#11F592]/40 backdrop-blur-[1px] translate-y-2 border border-black": "translate-y-full opacity-65 "
                 }`}>
                     <div className='h-16 w-full pr-3 pl-3'>
-                        <input type="text" placeholder='Party name' className={`relative h-16 mt-6 pl-4 rounded-2xl outline-2 min-w-60 w-full bg-white text-xl text-gray-800 
+                        <input type="text" placeholder='Party name' className={`relative h-16 mt-6 pl-4 rounded-2xl outline-2 outline-black  w-full bg-white text-xl text-gray-800 
                         ${isOpen?"":"hidden"}
-                        ` }/>
+                        ` }
+                        onChange={(e)=>{
+                            setFormData((Data)=>{
+                                return {...Data,name:e.target.value}
+                            })
+                        }}
+                        value={formData.name}
+                        />
+                    </div>
+                    
+                    <div className='h-42 mt-12  w-full pr-3 mb-3 pl-3'>
+                        <textarea name="description" placeholder='Description' 
+                        className={`bg-white w-full h-full rounded-2xl pr-3 pl-3 pt-2 pb-1 outline-2 outline-black text-xl text-gray-800 resize-none
+                        ${isOpen?"":"hidden"}
+                        `}
+                        onChange={(e)=>{
+                            setFormData((Data)=>{
+                                return {...Data,description:e.target.value}
+                            })
+                        }}
+                        value={formData.description}
+                        >
+                        </textarea>
+                    </div>
+
+                    <div className='relative h-15 w-full pr-3 pl-3'>
+                        <div className={`w-full flex justify-center select-none items-center h-16 rounded-xl  border-2 border-black bg-white text-black text-2xl z-99
+                        ${isOpen?"":"hidden"}
+                        `}
+                            onClick={()=>{
+                                setDropDownActive(!dropDownActive)
+                            }}
+
+                            >
+                            <h1>Party Type</h1>
+                            <Image alt='dropdown' src='/dropdown_Arrow.svg' width={25} height={25}
+                            className={`ml-2 transition-transform ${dropDownActive==true?"rotate-0":"rotate-180"}`}/>
+                        </div>
+
+                
+                    <div className='relative h-15 w-full pr-3 pl-3'>  
+                              
+                        <div className={`absolute rounded-t-xl border-l-2 border-r-2 border-t-2 border-black bottom-[190%] w-full left-0 p-2 space-y-2 bg-white transition-transform duration-700 ${dropDownActive?"":"hidden"}`}>
+
+
+
+                            {arrayOfEvents.map((event)=>{
+                                return  <div key={event}
+                                        className={`relative h-16 w-full rounded-xl flex items-center justify-center text-2xl cursor-pointer font-bold text-white bg-cover bg-center overflow-hidden`}
+                                        style={{ backgroundImage: `url(/${event}.png)` }}
+                                        onClick={()=>{
+                                            setFormData((Data)=>{
+                                                return {...Data,eventType:event}
+                                            })
+                                            setDropDownActive(false)
+                                        }}
+                                        >
+                                            <div className="absolute w-full h-full bg-black/50 cursor-pointer" /> 
+                                            <span className="relative z-10 select-none">
+                                                {event}
+                                            </span>
+                                        </div>
+                            })}
+
+                        </div>
+                    </div>
+                    </div>
+                    
+                    <div className='relative h-16 px-3'>
+                        <div className='relative flex flex-row border-2 justify-start items-center h-full w-full bg-white mt-5 rounded-xl text-black text-xl'>
+                            <div className='relative pl-5'>
+                                <h1>Duration :</h1>
+                            </div>
+
+
+                            <div className='relative'>
+                                <input min={0} max={24} type="number" name="hours" id="hours" className='h-10 w-12  select-none text-center ml-8 mr-5 bg-gray-300 p-2' placeholder='hr' 
+                                value={durationHours}
+                                onChange={(E)=>{
+                                    setDurationHours(Number(E.target.value))
+                                }}
+                                />
+                            </div>
+                            
+                            <div>
+                                <h1>Hours</h1>        
+                            </div>
+                            
+                            <div className='relative'>
+                                <input min={0} max={60} type="number" name="hours" id="hours" className='h-10 w-12  select-none text-center ml-5 mr-5 bg-gray-300 p-2' placeholder='min' 
+                                value={durationMins}
+                                onChange={(E)=>{
+                                    setDurationMins(Number(E.target.value))
+                                }}
+                                />
+                            </div>
+                            <div>
+                                <h1>Minutes</h1>        
+                            </div>
+
+                        </div>
                     </div>
 
 
