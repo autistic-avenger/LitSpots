@@ -15,7 +15,7 @@ export default function Home() {
       bg-black
       bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] 
       bg-size-[32px_32px] 
-      blur-[1px] 
+      blur-[2px] 
       -z-10"
     ></div>
     <Hero/> 
