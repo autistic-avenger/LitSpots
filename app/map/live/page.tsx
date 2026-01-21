@@ -379,7 +379,7 @@ export default function MAPS() {
 
         {/*Footer Elementsss*/}
         
-        <div className='h-14 w-full absolute z-1 bottom-11 sm:bottom-0 pointer-events-none flex justify-center items-center'>
+        <div className='h-14 w-full absolute z-1 bottom-18 sm:bottom-0 pointer-events-none flex justify-center items-center'>
             <div className="absolute bottom-0 overflow left-0 right-0 flex justify-center  ">
                 <div className={`
                     min-w-60 w-full max-w-140 ml-2 mr-2 h-120 mb-9 transition-all duration-500 ease-in-out rounded-t-3xl pointer-events-auto 
