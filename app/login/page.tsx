@@ -24,14 +24,6 @@ export default function LoginPage() {
     
     const router = useRouter()
     
-    //check for server redirect (middleware)
-    const from  = useSearchParams().get("from")
-    useEffect(()=>{
-        if (from=="server"){
-            toast.error("Please Login in First!")
-            router.replace("/login")
-        }
-    },[])    
     
     
     const [user,setUser] = useState<User>({
