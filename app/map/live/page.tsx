@@ -45,8 +45,7 @@ type Sumitting = 'PIN'|'MENU'|"NOT"
 export default function MAPS() {
     
     const router = useRouter()
-    
-    
+
     const [search,setSearch] = useState<string>("")
     const mapRef = useRef<MapRef | null>(null);
     const [submitting,setSubmitting] = useState<Sumitting>("NOT")
@@ -63,7 +62,10 @@ export default function MAPS() {
     const [popUpData,setPopUpData] = useState<POPUP>()
     const [hideSearch,setHideSearch] = useState<boolean>(false)
     
-    
+    const handleMapLoad = (event:any) => {
+        const map = event.target;
+        map.scrollZoom.setZoomRate(1/20); 
+    };
 
     useEffect(()=>{
 
@@ -83,7 +85,7 @@ export default function MAPS() {
             return;
         }
         try{
-            const response = await axios.get(`https://geocode.maps.co/search?q=${search} india&api_key=696ab1f6a9693374084149bug78b173`)
+            const response = await axios.post(`/api/search`,{search:search})
             toast.loading("Fetching location",{id:"geosearch",position:'bottom-center'})
             setTimeout(()=>{
                 if (response?.data[0] == undefined){
@@ -107,7 +109,7 @@ export default function MAPS() {
 
 
         }catch(err){
-            toast.error("error")
+            toast.error("Error Fetching API!")
         }
     }
 
@@ -338,6 +340,7 @@ export default function MAPS() {
         </div>
 
         <Map
+          onLoad={handleMapLoad}
           ref={mapRef}
           initialViewState={{
             longitude: 77.5775,
