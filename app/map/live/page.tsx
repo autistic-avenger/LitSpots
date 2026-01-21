@@ -61,6 +61,7 @@ export default function MAPS() {
     const [hostDisabled,setHostDisabled] = useState<boolean>(false)
     const [showPopup,setShowPopup] = useState<boolean>(false)
     const [popUpData,setPopUpData] = useState<POPUP>()
+    const [hideSearch,setHideSearch] = useState<boolean>(false)
     
     
 
@@ -164,6 +165,7 @@ export default function MAPS() {
                 setMapEnabled(true)
                 setDurationHours("")
                 setDurationMins("")
+                setHideSearch(false)
                 setTimeout(()=>{
                     setPin({lat:0,lon:0})
                     setHostDisabled(false)
@@ -180,6 +182,7 @@ export default function MAPS() {
                 setMenu(false)
                 setDurationHours("")
                 setDurationMins("")
+                setHideSearch(false)
                 setTimeout(()=>{
                     setPin({lat:0,lon:0})
                     setHostDisabled(false)
@@ -197,6 +200,7 @@ export default function MAPS() {
     }
 
     const handleHostPartyClick = ()=>{
+        setHideSearch(true)
         setShowPopup(false)
         if (submitting == "MENU"){
             handleSubmit()
@@ -251,7 +255,7 @@ export default function MAPS() {
     <div className='relative w-full h-screen overflow-hidden'>
         <div className='absolute w-full flex justify-center items-center pointer-events-none h-15 z-9'>
 
-            <div className='min-w-60 w-140 flex h-13 bg-white  border-3 rounded-4xl m-2 border-[#11F592] z-9 pl-6 overflow-hidden pointer-events-auto'>
+            <div className={`min-w-60 w-140 flex h-13 bg-white  border-3 rounded-4xl m-2 border-[#11F592] z-9 pl-6 overflow-hidden pointer-events-auto ${hideSearch?"hidden":"block"}`}>
 
                 <input type="text" placeholder='Search' className=' placeholder:text-gray-700 placeholder:mt-1 text-xl h-full w-[80%] outline-none caret-black text-black flex justify-end' 
 
