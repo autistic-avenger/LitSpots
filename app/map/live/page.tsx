@@ -18,9 +18,22 @@ interface FormData{
     eventType:eventType
     
 }
-interface PinData extends FormData{
-    lat:number
-    lon:number
+interface POPUP{
+    host:string
+    type:string
+    description:string
+    timeLeft:string
+    name:string
+}
+
+interface DbPin{
+    name:string,
+    description:string,
+    host:string,
+    type:string,
+    latitude:number,
+    longitude:number,
+    timeUpto:number
 }
 
 interface Cords{
@@ -44,9 +57,12 @@ export default function MAPS() {
     const [formData,setFormData] = useState<FormData>({name:"",description:"",eventType:"General"})
     const [durationHours,setDurationHours] = useState<any>("")
     const [durationMins,setDurationMins] = useState<any>("")
-    const [dbPins,setDbPin] = useState<any>([])
+    const [dbPins,setDbPin] = useState<Array<DbPin>>([])
     const [hostDisabled,setHostDisabled] = useState<boolean>(false)
-    // const [zoomlevel,setZoom] = useState<number>(12) Will apply Visible on zooming if Scaling issues  
+    const [showPopup,setShowPopup] = useState<boolean>(false)
+    const [popUpData,setPopUpData] = useState<POPUP>()
+    
+    
 
     useEffect(()=>{
 
@@ -105,6 +121,7 @@ export default function MAPS() {
         }
     }
     const handlePartyPin = async (e:MapLayerMouseEvent)=>{
+        
         setSubmitting("MENU")
         setMenu(true)
         setMapEnabled(false)
@@ -118,14 +135,19 @@ export default function MAPS() {
     }
 
     const handleSubmit= async ()=>{
-            if (formData.name==""){
-                toast.error("Party name can't be empty!",{duration:900})
-                return
-            }
-            if(formData.description==""){
-                toast.error("Description can't be empty!",{duration:900})
-                return
-            }
+        if (formData.name.length>15){
+            toast.error("Party name too large!(max:15)",{duration:900})
+            return
+        }
+        if (formData.name==""){
+            toast.error("Party name can't be empty!",{duration:900})
+            return
+        }
+        if(formData.description==""){
+            toast.error("Description can't be empty!",{duration:900})
+            return
+        }
+            setMapEnabled(true)
             let durationInMs = (3600000*durationHours) + (60000*durationMins)
             if (durationInMs == 0){
                 durationInMs = 1800000
@@ -146,7 +168,7 @@ export default function MAPS() {
                     setPin({lat:0,lon:0})
                     setHostDisabled(false)
                     setFormData({name:"",description:"",eventType:"General"})
-                },6000)
+                },8000)
                 setHostDisabled(true)
             } catch (error:any) {
                 toast.error(error.response.data.error)
@@ -156,14 +178,13 @@ export default function MAPS() {
 
                 setSubmitting("NOT")
                 setMenu(false)
-                setMapEnabled(true)
                 setDurationHours("")
                 setDurationMins("")
                 setTimeout(()=>{
                     setPin({lat:0,lon:0})
                     setHostDisabled(false)
                     setFormData({name:"",description:"",eventType:"General"})
-                },6000)
+                },8000)
                 setHostDisabled(true)
             }
 
@@ -176,12 +197,55 @@ export default function MAPS() {
     }
 
     const handleHostPartyClick = ()=>{
+        setShowPopup(false)
         if (submitting == "MENU"){
             handleSubmit()
             return
         }
         setSubmitting("PIN")
     }
+
+    const handleMarkerClick = (pinData:DbPin) =>{
+        if(mapEnabled==false){
+            return;
+        }
+
+        let timeRemainingText = "0 sec"
+        const timeLeft:number = pinData.timeUpto - Date.now()
+        if (timeLeft>0){
+            const seconds = timeLeft/1000
+            const hours = Math.floor(seconds/3600)
+            const Minutes = Math.floor((seconds % 3600) / 60)
+            const secs = Math.floor(seconds % 60)
+            if (hours==0 && Minutes>0){
+                timeRemainingText = `${Minutes} mins`
+            }
+            else if (hours>0){
+                timeRemainingText = `${hours} hr ${Minutes} mins`
+            }
+            else if(Minutes<=0){
+                timeRemainingText = `${secs} seconds`
+
+            }
+        }
+        
+
+
+
+
+        setPopUpData({host:pinData.host,type:pinData.type,description:pinData.description,timeLeft:timeRemainingText,name:pinData.name})
+
+        mapRef.current?.flyTo({
+            center:[pinData.longitude,pinData.latitude+0.000029],
+            zoom:23,
+            duration:1500
+        })
+
+        setMapEnabled(false)
+        setShowPopup(true)
+        
+    }
+
     
   return (
     <div className='relative w-full h-screen overflow-hidden'>
@@ -209,6 +273,66 @@ export default function MAPS() {
 
             </div>
         </div>
+        {/* //POPUP */}
+        <div className='absolute top-[12%]  w-full overflow-visible flex justify-center items-center pointer-events-none h-fit z-9'>
+            <div className={`relative border transition-all duration-300 ${showPopup?"block":"opacity-0"} border-black h-fit rounded-2xl pt-1  mx-3 bg-linear-to-b ${showPopup?"translate-0":"translate-y-[22%]"} from-[#11F592] to-gray-700 min-w-60 w-110`}>
+
+                <div className='relative flex justify-end h-7  '>
+                    <img alt='close' src={'/cross.svg'} width={25} height={25} className='mr-2 pointer-events-auto ' 
+                    onClick={()=>{
+                        setShowPopup(false)
+                        setMapEnabled(true)
+
+                    }}
+                     />
+                </div>
+
+                <div className='relative flex justify-center  h-20 w-full'>
+                    <div className={`relative w-100 overflow-hidden bg-no-repeat bg-cover bg-center rounded-2xl flex justify-center items-center min-w-60 mx-4`}
+                    style={{
+                            backgroundImage: `url("/${popUpData?.type}.png")`
+                        }}
+                    >
+                        <div className='absolute bg-no-repeat bg-center bg-cover opacity-80 bg-[url("/noise.png")] w-full h-full'/>
+                        
+                        <h1 className='relative text-4xl text-white font-mono font-bold'>{popUpData?.type}</h1>
+                    </div>
+
+                </div>
+                
+                <div className='h-11 w-100 min-w-60 mt-4 flex justify-start px-3 sm:px-4 '>
+
+                    <h1 className='overflow-hidden text-3xl font-mono font-bold min-w-60 '>
+                        {popUpData?.name}
+                    </h1>
+                </div>
+
+                <div className='overflow-hidden min-h-50 pb-10 h-fit w-full'>
+
+                    <div className='h-full w-full min-w-60 font-sans px-4'>
+                        {popUpData?.description}
+                    </div>
+                
+                </div>
+                <div className='h-fit flex items-baseline relative w-full px-2 mt-2  '>
+                    <div className='w-full flex justify-center text-white/74 font-mono '>
+                        Host: {popUpData?.host}
+                    </div>
+                </div>
+                    <div className='h-7 font-mono text-white/74 w-full flex justify-center px-4'>
+                        <img src="/radar.svg" alt="ping" className='h-6 animate-pulse mr-1 w-6' />
+                        Remaining: {popUpData?.timeLeft}
+                    </div>
+
+
+
+                
+
+
+            </div>
+
+        </div>
+
         <Map
           ref={mapRef}
           initialViewState={{
@@ -216,6 +340,7 @@ export default function MAPS() {
             latitude: 12.9629,
             zoom: 12
           }}
+          
           style={{width: '100%', height: '100%'}}
           mapStyle="https://tiles.openfreemap.org/styles/liberty"
           cursor='auto'
@@ -224,17 +349,26 @@ export default function MAPS() {
           dragPan = {mapEnabled}
           boxZoom = {mapEnabled}
           scrollZoom ={mapEnabled}
+          dragRotate = {mapEnabled}
+          keyboard ={mapEnabled}
+          doubleClickZoom = {mapEnabled}
         >   
             {(pins.lat!=0&&pins.lon!=0)&&
                 <Marker key={pins.lat} longitude={pins.lon} latitude={pins.lat}   anchor="bottom">
                     <img src={`/${formData.eventType}Pin.png`}  className='h-20 cursor-pointer w-20' />
                 </Marker>
             }
-            {dbPins.map((pin:any)=>{
+            
+            {dbPins.map((pin:DbPin)=>{
 
-                return <Marker key={pin._id} longitude={pin.longitude} latitude={pin.latitude}   anchor="bottom">
+                return <Marker onClick={()=>{
+                    handleMarkerClick(pin)
+                }} 
+                key={pin.longitude} longitude={pin.longitude} latitude={pin.latitude}  anchor="bottom">
                 <img src={`/${pin.type}Pin.png`}  className='h-20 cursor-pointer w-20' /> 
                 </Marker>
+
+               
             })}
 
         </Map>
@@ -320,7 +454,9 @@ export default function MAPS() {
                     </div>
                     
                     <div className='relative h-16 px-3'>
-                        <div className='relative flex flex-row border-2 justify-center sm:justify-start items-center h-full w-full bg-white mt-5 rounded-xl text-black text-xl '>
+                        <div className={`relative flex flex-row border-2 justify-center sm:justify-start items-center h-full w-full bg-white mt-5 rounded-xl text-black text-xl  
+                            ${isOpen?"":"hidden"}
+                            `}>
                             <div className='relative pl-1 sm:pl-5 '>
                                 <h1>Duration :</h1>
                             </div>
