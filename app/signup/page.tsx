@@ -71,7 +71,7 @@ export default function SignupPage() {
         }
     };
   return (
-    <div className="h-screen w-full flex justify-center items-center">
+    <div className="h-screen w-full bg-[#0A0A0A] flex justify-center items-center">
         <div className="h-145 w-100 rounded-2xl bg-[#131d13] flex flex-col items-center shadow-green-500 shadow-[0px_0px_12px_rgba(0,0,0,0.25)]">
             <div className="font-bold h-25 w-full  flex justify-center items-center text-5xl mt-6">
                 <h1 className="bg-linear-to-r from-[#52eeaa] via-[#35e90d] to-[#42f307] inline-block text-transparent bg-clip-text p-1">Sign Up</h1>
@@ -80,7 +80,7 @@ export default function SignupPage() {
             
 
             <input 
-                className="h-20 w-[80%] rounded-[5px] focus:outline-0 border-b border-[#35e90d] pt-10 text-xl placeholder-white palceholder " 
+                className="h-20 w-[80%] rounded-[5px] focus:outline-0 border-b border-[#35e90d] pt-10 text-xl placeholder-white palceholder text-white " 
                 id="email" 
                 type="text"  
                 placeholder="Email"
@@ -94,7 +94,7 @@ export default function SignupPage() {
                 />
 
             <input 
-                className="h-20 w-[80%]  rounded-[5px] focus:outline-0 border-b border-[#35e90d] pt-10 text-xl placeholder-white palceholder select-none" 
+                className="h-20 w-[80%]  rounded-[5px] focus:outline-0 border-b border-[#35e90d] pt-10 text-xl placeholder-white palceholder select-none text-white" 
                 id="username" 
                 type="text"  
                 placeholder="Username"
@@ -121,7 +121,7 @@ export default function SignupPage() {
                 </button>
 
                 <input 
-                    className="h-20 w-[80%] rounded-[5px] focus:outline-0 border-b border-[#35e90d] pt-10 text-xl placeholder-white palceholder " 
+                    className="h-20 w-[80%] text-white rounded-[5px] focus:outline-0 border-b border-[#35e90d] pt-10 text-xl placeholder-white palceholder " 
                     id="password" 
                     type={ShowPassword?"text":"password"}  
                     placeholder="Password"
@@ -137,14 +137,14 @@ export default function SignupPage() {
 
             <div className="w-full h-20 mt-8 justify-center flex items-center ">
                     <button 
-                    onClick={onSignup} className={`border w-[83%] h-[80%] rounded-2xl text-3xl ${roboto.className} text-shadow-2xs shadow-black cursor-pointer active:scale-[99%] border-white antialiased flex justify-center items-center ${loading?"opacity-20 scale-[98%] bg-green-950 pointer-events-none":"bg-green-400"}`}>
+                    onClick={onSignup} className={`border w-[83%] h-[80%] rounded-2xl text-3xl ${roboto.className} text-shadow-2xs text-white shadow-black cursor-pointer active:scale-[99%] border-white antialiased flex justify-center items-center ${loading?"opacity-20 scale-[98%] bg-green-950 pointer-events-none":"bg-green-400"}`}>
                         {loading?<Image alt="loader" className="animate-spin" width={50} height={50} src="/loading.svg" />:"SUBMIT"}
                     </button>
             </div>
 
 
             <div className="mt-2">
-                <p>Already have an account? 
+                <p className="text-white">Already have an account? 
                     <Link className="text-green-400" href="/login"> Login</Link>
                 </p>
             </div>

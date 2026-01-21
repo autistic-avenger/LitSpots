@@ -8,7 +8,15 @@ export default function Home() {
     <div className='relative min-h-screen overflow-hidden'>
       <Navbar/>
       <div
-      className="absolute inset-0 h-[200vh] w-full bg-black bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[32px_32px] mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_90%) [-webkit-mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_90%)] blur-[1px] -z-10"
+      className="absolute  
+      inset-0
+      h-[200vh] 
+      w-full 
+      bg-black
+      bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] 
+      bg-size-[32px_32px] 
+      blur-[1px] 
+      -z-10"
     ></div>
     <Hero/> 
     <MapHero/>
